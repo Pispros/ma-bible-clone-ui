@@ -28,11 +28,17 @@ const NoteContentComponent = ({ noteId } : { noteId?: string | string[] | undefi
     //   //postRequest(`${apiUrl}/${endPointsMapping.get('note')['post']}`, payload)
     // }, [headerInputValue, noteContentValue])
 
+    useEffect(() => {
+      console.log(notes);
+    }, [notes])
+    
+
     const addNote = async () => {
         const response = saveNote({
             title: headerInputValue,
             content: noteContentValue
         });
+        console.log(response);
         switch (response.state) {
             case POST_ACTION:
                 
