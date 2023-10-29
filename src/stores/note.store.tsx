@@ -1,15 +1,12 @@
 import { NoteInterface } from "@/interfaces/note.type";
-import { action } from "easy-peasy";
+import { action, computed } from "easy-peasy";
 
 export const noteStore = {
     notes: [],
-    addNote: action((state, payload) => {
+    saveNote: action((state, payload: NoteInterface) => {
 
     }),
-    removeNote: action((state, payload) => {
+    removeNote: action((state, payload: NoteInterface) => {
 
     }),
-    updateNote: action((state, payload) => {
-
-    })
 }

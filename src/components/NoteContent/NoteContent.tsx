@@ -1,19 +1,37 @@
 'use client';
 
 import './NoteContent.scss'
-import { Box, Text, useMediaQuery, Input } from '@chakra-ui/react';
+import { Box, useMediaQuery, Textarea, Button } from '@chakra-ui/react';
 import Header from '@/components/Header/Header';
 import Image from 'next/image';
 import noteD from '@/assets/icons/active/note.png';
+import { useEffect, useState } from 'react';
+import { useStoreState } from 'easy-peasy';
+import { NoteInterface } from '@/interfaces/note.type';
+import tagD from '@/assets/icons/active/tag.png';
+import undo from '@/assets/icons/undo.png';
+import forwardD from '@/assets/icons/forward.png';
 
 const NoteContentComponent = ({ noteId } : { noteId?: string | string[] | undefined }) => 
 {
+    const notes: Array<NoteInterface> = useStoreState((state: any) => state?.notes);
 	const [isForDesktop] = useMediaQuery('(min-width: 990px)');
+    const [headerInputValue, setHeaderInputValue] = useState(noteId !== undefined ? 
+        notes.find(element => String(element.id) === noteId) 
+        : 'Titre de la note'
+    );
+    const [noteContentValue, setNoteContentValue] = useState('');
+
+    useEffect(() => {
+      
+    }, [headerInputValue, noteContentValue])
+    
 
 	const titleIcon = (
         <Image
             src={noteD}
             alt='Title icon'
+            style={{width: isForDesktop ? 30 : 40}}
         />
     );
     const titleIcons = (
@@ -37,7 +55,7 @@ const NoteContentComponent = ({ noteId } : { noteId?: string | string[] | undefi
         </>        
     );
 	return(
-		<div className="NoteWrapper">
+		<div className="NoteContentWrapper">
 			<Header
                 title='Titre de la note'
                 titleIcon={titleIcon}
@@ -45,7 +63,80 @@ const NoteContentComponent = ({ noteId } : { noteId?: string | string[] | undefi
                 showBorder={true}
 				showBack={true}
 				returnUrl='/note'
+                editableHeader={true}
+                editConfiguration={[headerInputValue, setHeaderInputValue]}
             />
+            <Box
+               minHeight={isForDesktop ? "84vh" : "73vh"}
+            >
+                <Textarea
+                    mt={isForDesktop ? "2" : "3"}
+                    ml="1%"
+                    resize="none"
+                    minHeight={isForDesktop ? "82vh" : "73vh"}
+                    width="98%"
+                    placeholder='Saisir une note.'
+                    border="unset"
+                    outline="none"
+                    focusBorderColor='white'
+                    value={noteContentValue}
+                    onChange={(e) => setNoteContentValue(e.target.value)}
+                />
+            </Box>
+            <Box
+                height="8vh"
+                width="100%"
+                display="flex"
+                padding="0 30px"
+                justifyContent="space-between"
+                alignItems="center"
+                flexFlow="row nowrap"
+                borderBottom={!isForDesktop ? "solid 1px var(--relevant-background)" : "unset"}
+                borderTop="solid 1px var(--relevant-background)"
+            >
+                 <Box
+                    width="50px"
+                    display="flex"
+                    alignItems="center"
+                    flexFlow="row nowrap"
+                 >
+                    <Image
+                        src={tagD}
+                        alt='tag icon'
+                        style={{width: isForDesktop ? 20 : 20}}
+                    />
+                    &nbsp;
+                    1
+                 </Box>
+                 <Box
+                    width="50px"
+                    display="flex"
+                    alignItems="center"
+                    flexFlow="row nowrap"
+                 >
+                    <Image
+                        src={undo}
+                        alt='undo icon'
+                        style={{width: isForDesktop ? 20 : 20}}
+                    />
+                    &nbsp;&nbsp;&nbsp;
+                    <Image
+                        src={forwardD}
+                        alt='forwardD icon'
+                        style={{width: isForDesktop ? 20 : 20}}
+                    />
+                 </Box>
+                 <Box
+                    width="50px"
+                    display="flex"
+                    alignItems="center"
+                    flexFlow="row nowrap"
+                 >
+                    <Button backgroundColor="#9747FF" color="white" size='sm'>
+                        OK
+                    </Button>
+                 </Box>
+            </Box>
 		</div>
 	)
 }
