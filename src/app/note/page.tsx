@@ -98,7 +98,7 @@ const notePage = () => {
                 showBorder={isForDesktop}
             />
             {
-                notes.length > 0 ?
+                notes?.length > 0 ?
                 <></>
                 :
                 <>

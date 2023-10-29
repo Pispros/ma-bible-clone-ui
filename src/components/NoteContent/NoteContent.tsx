@@ -6,15 +6,17 @@ import Header from '@/components/Header/Header';
 import Image from 'next/image';
 import noteD from '@/assets/icons/active/note.png';
 import { useEffect, useState } from 'react';
-import { useStoreState } from 'easy-peasy';
+import { useStoreActions, useStoreState } from 'easy-peasy';
 import { NoteInterface } from '@/interfaces/note.type';
 import tagD from '@/assets/icons/active/tag.png';
 import undo from '@/assets/icons/undo.png';
 import forwardD from '@/assets/icons/forward.png';
+import { POST_ACTION, UPDATE_ACTION } from '@/constants/state.conts';
 
 const NoteContentComponent = ({ noteId } : { noteId?: string | string[] | undefined }) => 
 {
     const notes: Array<NoteInterface> = useStoreState((state: any) => state?.notes);
+    const saveNote = useStoreActions((actions: any) => actions.saveNote);
 	const [isForDesktop] = useMediaQuery('(min-width: 990px)');
     const [headerInputValue, setHeaderInputValue] = useState(noteId !== undefined ? 
         notes.find(element => String(element.id) === noteId) 
@@ -22,9 +24,27 @@ const NoteContentComponent = ({ noteId } : { noteId?: string | string[] | undefi
     );
     const [noteContentValue, setNoteContentValue] = useState('');
 
-    useEffect(() => {
-      
-    }, [headerInputValue, noteContentValue])
+    // useEffect(() => {
+    //   //postRequest(`${apiUrl}/${endPointsMapping.get('note')['post']}`, payload)
+    // }, [headerInputValue, noteContentValue])
+
+    const addNote = async () => {
+        const response = saveNote({
+            title: headerInputValue,
+            content: noteContentValue
+        });
+        switch (response.state) {
+            case POST_ACTION:
+                
+                break;
+            case UPDATE_ACTION:
+                
+                break;
+        
+            default:
+                break;
+        }
+    }
     
 
 	const titleIcon = (
@@ -67,13 +87,13 @@ const NoteContentComponent = ({ noteId } : { noteId?: string | string[] | undefi
                 editConfiguration={[headerInputValue, setHeaderInputValue]}
             />
             <Box
-               minHeight={isForDesktop ? "84vh" : "73vh"}
+               height={isForDesktop ? "84vh" : "74vh"}
             >
                 <Textarea
                     mt={isForDesktop ? "2" : "3"}
                     ml="1%"
                     resize="none"
-                    minHeight={isForDesktop ? "82vh" : "73vh"}
+                    height={isForDesktop ? "82vh" : "73vh"}
                     width="98%"
                     placeholder='Saisir une note.'
                     border="unset"
@@ -132,7 +152,7 @@ const NoteContentComponent = ({ noteId } : { noteId?: string | string[] | undefi
                     alignItems="center"
                     flexFlow="row nowrap"
                  >
-                    <Button backgroundColor="#9747FF" color="white" size='sm'>
+                    <Button onClick={()=>{addNote()}} backgroundColor="#9747FF" color="white" size='sm'>
                         OK
                     </Button>
                  </Box>

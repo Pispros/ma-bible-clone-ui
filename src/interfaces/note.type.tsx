@@ -1,5 +1,5 @@
 export type NoteInterface = {
-    id: number;
+    id?: number;
     title: string;
     content: string;
     tags?: Array<string>;
