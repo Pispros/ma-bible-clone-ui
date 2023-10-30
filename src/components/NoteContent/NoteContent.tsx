@@ -22,6 +22,7 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
     const saveNote   = useStoreActions((actions: any) => actions.saveNote);
     const updateNote = useStoreActions((actions: any) => actions.updateNote);
 	const [isForDesktop] = useMediaQuery('(min-width: 990px)');
+    const [noteIdToFilter, setNoteIdToFilter] = useState(noteId);
     const [headerInputValue, setHeaderInputValue] = useState('Titre de la note');
     const [noteContentValue, setNoteContentValue] = useState('');
     const [note, setNote] = useState<NoteInterface>();
@@ -41,18 +42,20 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
             content: noteContentValue
         }
         try {
-            if (noteId) {
+            if (noteIdToFilter) {
                 updateNote({
-                    id: Number(noteId),
+                    id: Number(noteIdToFilter),
                     ...payload
                 })
                 setIsEditing(false);
                 setJustEdited(true);
                 //updateRequest(`${apiUrl}/${endPointsMapping.get('note')['put']}`, payload);
             } else {
-                saveNote(payload);
+                const response = saveNote(payload);
+                setNoteIdToFilter(response?.payload?.id);
+                setNote(response?.payload);
                 setIsEditing(false);
-                setJustEdited(true);
+                setJustEdited(true);              
                 //postRequest(`${apiUrl}/${endPointsMapping.get('note')['put']}`, payload);
             }
         } catch (error) {
