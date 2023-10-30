@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Text, useMediaQuery, InputGroup, InputLeftElement, Input } from '@chakra-ui/react';
+import { Box, Text, useMediaQuery, InputGroup, InputLeftElement, Input, SkeletonText } from '@chakra-ui/react';
 import './styles.scss';
 import Header from '@/components/Header/Header';
 import noteD from '@/assets/icons/active/note.png';
@@ -8,17 +8,24 @@ import add from '@/assets/icons/add.png';
 import empty from '@/assets/img/empty.png';
 import Image from 'next/image';
 import { SearchIcon } from '@chakra-ui/icons';
-import { useStoreState } from 'easy-peasy';
+import { useStoreActions, useStoreState } from 'easy-peasy';
 import { NoteInterface } from '@/interfaces/note.interface';
 import { useRouter } from 'next/navigation';
 import NoteListComponent from '@/components/NoteListComponent/NoteListComponent';
+import { useEffect, useState } from 'react';
+import { getRequest } from '@/services/requests.service';
+import { apiUrl } from '@/constants/environnement.const';
+import { endPointsMapping } from '@/constants/endpoints.mapping';
 
 
 const notePage = () => {
+    const mockSkeleton = [{},{},{},{},{},{},{},{},{},{},{},{}];
     const router = useRouter();
     const [isForDesktop] = useMediaQuery('(min-width: 990px)');
-    const notes: Array<NoteInterface> = useStoreState((state: any) => state.notes);
-    
+    const notes: Array<NoteInterface> = useStoreState((state: any) => state.getNotes);
+    const [isLoading, setisLoading] = useState(true);
+    const saveMultipleNotes = useStoreActions((actions: any) => actions.saveMultipleNotes);
+
     const titleIcon = (
         <Image
             src={noteD}
@@ -89,6 +96,17 @@ const notePage = () => {
             </Box>
         </>        
     );
+    useEffect(() => {
+      getRequest(`${apiUrl}/${endPointsMapping.get('note')['get']}`)
+      .then((response: any) => {
+        for (let index = 0; index < response.data.length; index++) {
+            response.data[index].createdAt = new Date().toISOString();
+        }
+        saveMultipleNotes(response.data);
+        setisLoading(false);      
+      })
+    }, [])
+    
     return (
         <Box className='noteWrapper'>
             <Header
@@ -98,7 +116,20 @@ const notePage = () => {
                 showBorder={isForDesktop}
             />
             {
-                notes?.length > 0 ?
+                isLoading &&
+                <>
+                    {
+                        mockSkeleton?.map((item, index) => (
+                            <Box key={`skeleton-${index}`} padding='6' boxShadow='lg' bg='white'>
+                                <SkeletonText mt='4' noOfLines={4} spacing='4' skeletonHeight='2' />
+                                <SkeletonText mt='4' noOfLines={4} spacing='4' skeletonHeight='2' />
+                            </Box>
+                       ))
+                    }
+                </>
+            }
+            {
+                !isLoading && notes?.length > 0 ?
                 <>
                     {
                        notes?.map(note => (

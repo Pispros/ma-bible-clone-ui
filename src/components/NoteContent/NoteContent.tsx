@@ -1,7 +1,7 @@
 'use client';
 
 import './NoteContent.scss'
-import { Box, useMediaQuery, Textarea, Button } from '@chakra-ui/react';
+import { Box, useMediaQuery, Textarea, Button, useToast } from '@chakra-ui/react';
 import Header from '@/components/Header/Header';
 import Image from 'next/image';
 import noteD from '@/assets/icons/active/note.png';
@@ -18,7 +18,8 @@ import { formatDate } from '@/utils/dateTime.helper';
 
 const NoteContentComponent = ({ noteId } : { noteId?: string }) => 
 {
-    const notes: Array<NoteInterface> = useStoreState((state: any) => state?.notes);
+    const toast = useToast();
+    const notes: Array<NoteInterface> = useStoreState((state: any) => state?.getNotes);
     const saveNote   = useStoreActions((actions: any) => actions.saveNote);
     const updateNote = useStoreActions((actions: any) => actions.updateNote);
 	const [isForDesktop] = useMediaQuery('(min-width: 990px)');
@@ -39,7 +40,7 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
     const addOrUpdateNote = async () => {
         let payload = {
             title: headerInputValue,
-            content: noteContentValue
+            body: noteContentValue
         }
         try {
             if (noteIdToFilter) {
@@ -56,10 +57,14 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
                 setNote(response?.payload);
                 setIsEditing(false);
                 setJustEdited(true);              
-                //postRequest(`${apiUrl}/${endPointsMapping.get('note')['put']}`, payload);
+                postRequest(`${apiUrl}/${endPointsMapping.get('note')['put']}`, payload);
             }
         } catch (error) {
             console.log(error);
+            toast({
+                title: "Oops",
+                description: "Quelque chose s'est mal passé, veuillez reéssayer plus tard."
+            });
         }        
     }
     
@@ -97,7 +102,7 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
             const note = notes.find(element => String(element.id) === noteId);
             setNote(note);
             setHeaderInputValue(note?.title || 'Titre de la note');
-            setNoteContentValue(note?.content || '');
+            setNoteContentValue(note?.body || '');
         }       
     }, [noteId])  
 	return(

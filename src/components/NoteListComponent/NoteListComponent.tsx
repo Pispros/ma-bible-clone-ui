@@ -50,7 +50,7 @@ const NoteListComponent = ({ note, isForDesktop }: { note: NoteInterface; isForD
 						fontSize="sm"
 					>
 						{
-							note.content
+							note.body
 						}
 					</Text>					
 				</Box>
