@@ -24,7 +24,7 @@ import { DeleteIcon } from '@chakra-ui/icons'
 import { useStoreActions, useStoreState } from 'easy-peasy'
 
 
-const NoteListComponent = ({ note, isForDesktop }: { note: NoteInterface; isForDesktop: boolean }) => 
+const NoteListComponent = ({ note, isForDesktop, searchValue }: { note: NoteInterface; isForDesktop: boolean; searchValue?: string }) => 
 {
 	const router = useRouter();
 	const toast = useToast();
@@ -33,7 +33,6 @@ const NoteListComponent = ({ note, isForDesktop }: { note: NoteInterface; isForD
 	const [copiedContent, setCopiedContent] = useState('');
 	const [iscontentCopied, setIscontentCopied] = useState(false);
 	const removeNote = useStoreActions((actions: any) => actions.removeNote);
-    const searchValue = useStoreState((actions: any) => actions.searchValue);
 
 	const formatedDate = () : string => {
 		if (note.updatedAt) {
@@ -53,7 +52,7 @@ const NoteListComponent = ({ note, isForDesktop }: { note: NoteInterface; isForD
 	}
 
 	useEffect(() => {
-	  if (searchValue.length > 0 && searchValue !== " ") {
+	  if (searchValue && searchValue.length > 0 && searchValue !== " ") {
 		const noteContentHtml: any = document.getElementById(`note-content-${note.id}`);
 		let noteContent;
 		if (!iscontentCopied) {
@@ -63,17 +62,23 @@ const NoteListComponent = ({ note, isForDesktop }: { note: NoteInterface; isForD
 		} else {
 			noteContent = copiedContent;
 		}
-		const splittedContent = noteContent.split(' ');
+		const splittedContentTemp = noteContent.split('\n');
+		const splittedContent = splittedContentTemp.join(' ').split(' ');
+
 		if (
 			String(noteContent).toLowerCase().includes(String(searchValue).toLowerCase()) && 
-			searchValue.length > 2
+			searchValue.length > 1
 		) {			
 			noteContentHtml.innerHTML = "";
 			for (let index = 0; index < splittedContent.length; index++) {
-				const span = document.createElement('span');
+				const span = document.createElement('span');				
 				span.innerText = splittedContent[index] + " ";
 				if (String(splittedContent[index]).toLowerCase().includes(String(searchValue).toLowerCase())) {				
 					span.setAttribute('style', 'color: var(--primary-color)')
+				}
+				const uselessBr = span.querySelector('br');
+				if (uselessBr) {
+					uselessBr.remove();
 				}
 				noteContentHtml.appendChild(span);
 			}
@@ -199,7 +204,7 @@ const NoteListComponent = ({ note, isForDesktop }: { note: NoteInterface; isForD
 									padding="3"
 									justifyContent="center"
 									borderRadius="xl"
-									right="12vh"
+									right={isForDesktop ? "12vh" : "4vh"}
 								>
 									<Box
 										display="flex"

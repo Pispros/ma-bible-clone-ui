@@ -111,7 +111,7 @@ const NotePage = () => {
         .then((response: any) => {
             const temp: Array<NoteInterface> = [];
             for (let index = 0; index < 3; index++) {
-                response.data[index].createdAt = new Date().toISOString();                
+                response.data[index].createdAt = new Date().toISOString();                        
                 temp.push(response.data[index])
             }
             // Just to see nice skeleton :)
@@ -153,6 +153,7 @@ const NotePage = () => {
                                 note={note}
                                 key={"note" + note.id}
                                 isForDesktop={isForDesktop}
+                                searchValue={search}
                             />
                        )) 
                     }
