@@ -1,7 +1,7 @@
-export type NoteInterface = {
-    id: number;
+export interface NoteInterface {
+    id?: number;
     title: string;
-    content: string;
+    body: string;
     tags?: Array<string>;
     createdAt: string;
     updatedAt?: string

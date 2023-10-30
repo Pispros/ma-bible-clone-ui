@@ -1,0 +1,3 @@
+export const UPDATE_ACTION = "UPDATE_ACTION";
+export const POST_ACTION = "POST_ACTION";
+export const DELETE_ACTION = "DELETE_ACTION";

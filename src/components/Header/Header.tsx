@@ -1,30 +1,37 @@
 'use client';
 
-import { Box } from '@chakra-ui/react';
+import { Box, Input, useMediaQuery } from '@chakra-ui/react';
 import './Header.scss';
 import { ChevronLeftIcon } from '@chakra-ui/icons'
 import { useRouter } from 'next/navigation';
 
 
-const Header = ({ title, titleIcon,  icons, showBack, showBorder, returnUrl } : { 
+const Header = ({ title, titleIcon,  icons, showBack, showBorder, returnUrl, editableHeader, editConfiguration, setIsEditing } : { 
 	title?: string;  
 	titleIcon?: React.ReactNode;
 	icons?: React.ReactNode; 
 	showBack?: boolean,
 	showBorder?: boolean,
-	returnUrl?: string
+	editableHeader?: boolean,
+	returnUrl?: string;
+	editConfiguration?: any;
+	setIsEditing?: any
 })  => 
 {
 	const router = useRouter();
+	const [isForDesktop] = useMediaQuery('(min-width: 990px)');
+
 	return(
 		<div className="HeaderWrapper">
 			<Box
+				className='content'
 				display="flex"
 				flexFlow="row nowrap"
 				justifyContent="space-between"
 				alignItems="center"
 				padding="10px 20px 10px 10px"
-				width="100%"
+				width={isForDesktop ? "63%" : "100%"}
+				height="7vh"
 				borderBottom={showBorder ? "solid 1px var(--relevant-background)" : "unset"}
 			>
 				<Box
@@ -47,17 +54,36 @@ const Header = ({ title, titleIcon,  icons, showBack, showBorder, returnUrl } : 
 					>
 						{ titleIcon }
 					</Box>
-					<Box
+					{
+						!editableHeader &&
+						<Box
 						fontWeight="bold"
 						fontSize="xl"
 						ml="2"
-					>
-						{ title }
-					</Box>
+						>
+							{ title }
+						</Box> 
+					}
 				</Box>
-				<Box>
-					{ icons }
-				</Box>
+				{
+					editableHeader ?
+					<>
+						<Input
+							value={editConfiguration[0]}
+							onChange={(e) => editConfiguration[1](e.target.value)}
+							w="95%"
+							ml="2"
+							h="4vh"
+							onFocus={()=>{setIsEditing(true)}}
+						/>
+					</>
+					:
+					<>
+						<Box>
+							{ icons }
+						</Box>
+					</>
+				}				
 			</Box>
 		</div>
 	)

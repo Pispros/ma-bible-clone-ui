@@ -1,6 +1,6 @@
-import { createStore } from 'easy-peasy';
+import { createStore, persist } from 'easy-peasy';
 import { noteStore } from './note.store';
 
-export const easyPeasyStore = createStore({
+export const easyPeasyStore = createStore(persist({
     ...noteStore
-});
+}));
