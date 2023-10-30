@@ -7,49 +7,57 @@ import Image from 'next/image';
 import noteD from '@/assets/icons/active/note.png';
 import { useEffect, useState } from 'react';
 import { useStoreActions, useStoreState } from 'easy-peasy';
-import { NoteInterface } from '@/interfaces/note.type';
+import { NoteInterface } from '@/interfaces/note.interface';
 import tagD from '@/assets/icons/active/tag.png';
 import undo from '@/assets/icons/undo.png';
 import forwardD from '@/assets/icons/forward.png';
-import { POST_ACTION, UPDATE_ACTION } from '@/constants/state.conts';
+import { postRequest, updateRequest } from '@/services/requests.service';
+import { endPointsMapping } from '@/constants/endpoints.mapping';
+import { apiUrl } from '@/constants/environnement.const';
+import { formatDate } from '@/utils/dateTime.helper';
 
-const NoteContentComponent = ({ noteId } : { noteId?: string | string[] | undefined }) => 
+const NoteContentComponent = ({ noteId } : { noteId?: string }) => 
 {
     const notes: Array<NoteInterface> = useStoreState((state: any) => state?.notes);
-    const saveNote = useStoreActions((actions: any) => actions.saveNote);
+    const saveNote   = useStoreActions((actions: any) => actions.saveNote);
+    const updateNote = useStoreActions((actions: any) => actions.updateNote);
 	const [isForDesktop] = useMediaQuery('(min-width: 990px)');
-    const [headerInputValue, setHeaderInputValue] = useState(noteId !== undefined ? 
-        notes.find(element => String(element.id) === noteId) 
-        : 'Titre de la note'
-    );
+    const [headerInputValue, setHeaderInputValue] = useState('Titre de la note');
     const [noteContentValue, setNoteContentValue] = useState('');
-
-    // useEffect(() => {
-    //   //postRequest(`${apiUrl}/${endPointsMapping.get('note')['post']}`, payload)
-    // }, [headerInputValue, noteContentValue])
-
-    useEffect(() => {
-      console.log(notes);
-    }, [notes])
+    const [note, setNote] = useState<NoteInterface>();
+    const [isEditing, setIsEditing] = useState(false);
+    const [justEdited, setJustEdited] = useState(false);
     
+    const formatedDate = () : string => {
+		if (note?.updatedAt) {
+			return formatDate(new Date(note?.updatedAt));
+		}
+		return formatDate(new Date(String(note?.createdAt)));
+	}
 
-    const addNote = async () => {
-        const response = saveNote({
+    const addOrUpdateNote = async () => {
+        let payload = {
             title: headerInputValue,
             content: noteContentValue
-        });
-        console.log(response);
-        switch (response.state) {
-            case POST_ACTION:
-                
-                break;
-            case UPDATE_ACTION:
-                
-                break;
-        
-            default:
-                break;
         }
+        try {
+            if (noteId) {
+                updateNote({
+                    id: Number(noteId),
+                    ...payload
+                })
+                setIsEditing(false);
+                setJustEdited(true);
+                //updateRequest(`${apiUrl}/${endPointsMapping.get('note')['put']}`, payload);
+            } else {
+                saveNote(payload);
+                setIsEditing(false);
+                setJustEdited(true);
+                //postRequest(`${apiUrl}/${endPointsMapping.get('note')['put']}`, payload);
+            }
+        } catch (error) {
+            console.log(error);
+        }        
     }
     
 
@@ -80,6 +88,15 @@ const NoteContentComponent = ({ noteId } : { noteId?: string | string[] | undefi
             </Box>
         </>        
     );
+
+    useEffect(() => {
+        if (noteId) {
+            const note = notes.find(element => String(element.id) === noteId);
+            setNote(note);
+            setHeaderInputValue(note?.title || 'Titre de la note');
+            setNoteContentValue(note?.content || '');
+        }       
+    }, [noteId])  
 	return(
 		<div className="NoteContentWrapper">
 			<Header
@@ -107,6 +124,7 @@ const NoteContentComponent = ({ noteId } : { noteId?: string | string[] | undefi
                     focusBorderColor='white'
                     value={noteContentValue}
                     onChange={(e) => setNoteContentValue(e.target.value)}
+                    onFocus={()=>{setIsEditing(true)}}
                 />
             </Box>
             <Box
@@ -134,34 +152,49 @@ const NoteContentComponent = ({ noteId } : { noteId?: string | string[] | undefi
                     &nbsp;
                     1
                  </Box>
-                 <Box
-                    width="50px"
-                    display="flex"
-                    alignItems="center"
-                    flexFlow="row nowrap"
-                 >
-                    <Image
-                        src={undo}
-                        alt='undo icon'
-                        style={{width: isForDesktop ? 20 : 20}}
-                    />
-                    &nbsp;&nbsp;&nbsp;
-                    <Image
-                        src={forwardD}
-                        alt='forwardD icon'
-                        style={{width: isForDesktop ? 20 : 20}}
-                    />
-                 </Box>
-                 <Box
-                    width="50px"
-                    display="flex"
-                    alignItems="center"
-                    flexFlow="row nowrap"
-                 >
-                    <Button onClick={()=>{addNote()}} backgroundColor="#9747FF" color="white" size='sm'>
-                        OK
-                    </Button>
-                 </Box>
+                 {
+                    (isEditing || note === undefined) ? 
+                    <>
+                        <Box
+                            width="50px"
+                            display="flex"
+                            alignItems="center"
+                            flexFlow="row nowrap"
+                        >
+                            <Image
+                                src={undo}
+                                alt='undo icon'
+                                style={{width: isForDesktop ? 20 : 20}}
+                            />
+                            &nbsp;&nbsp;&nbsp;
+                            <Image
+                                src={forwardD}
+                                alt='forwardD icon'
+                                style={{width: isForDesktop ? 20 : 20}}
+                            />
+                        </Box>
+                        <Box
+                            width="50px"
+                            display="flex"
+                            alignItems="center"
+                            flexFlow="row nowrap"
+                        >
+                            <Button onClick={()=>{addOrUpdateNote()}} backgroundColor="#9747FF" color="white" size='sm'>
+                                OK
+                            </Button>
+                        </Box>
+                    </>
+                    :
+                    <>
+                        <Box>
+                            Modifié : {
+                                justEdited ? "A l'instant"
+                                :
+                                formatedDate()
+                            }
+                        </Box>
+                    </>
+                 }
             </Box>
 		</div>
 	)

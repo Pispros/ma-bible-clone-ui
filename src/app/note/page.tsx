@@ -9,16 +9,16 @@ import empty from '@/assets/img/empty.png';
 import Image from 'next/image';
 import { SearchIcon } from '@chakra-ui/icons';
 import { useStoreState } from 'easy-peasy';
-import { NoteInterface } from '@/interfaces/note.type';
+import { NoteInterface } from '@/interfaces/note.interface';
 import { useRouter } from 'next/navigation';
+import NoteListComponent from '@/components/NoteListComponent/NoteListComponent';
 
 
 const notePage = () => {
     const router = useRouter();
     const [isForDesktop] = useMediaQuery('(min-width: 990px)');
     const notes: Array<NoteInterface> = useStoreState((state: any) => state.notes);
-
-
+    
     const titleIcon = (
         <Image
             src={noteD}
@@ -99,7 +99,17 @@ const notePage = () => {
             />
             {
                 notes?.length > 0 ?
-                <></>
+                <>
+                    {
+                       notes?.map(note => (
+                            <NoteListComponent
+                                note={note}
+                                key={note.id}
+                                isForDesktop={isForDesktop}
+                            />
+                       )) 
+                    }
+                </>
                 :
                 <>
                     <Box 
