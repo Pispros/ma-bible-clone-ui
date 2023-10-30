@@ -197,7 +197,7 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
                             alignItems="center"
                             flexFlow="row nowrap"
                         >
-                            <Button onClick={()=>{addOrUpdateNote()}} backgroundColor="#9747FF" color="white" size='sm'>
+                            <Button onClick={()=>{addOrUpdateNote()}} backgroundColor="var(--primary-color)" color="white" size='sm'>
                                 OK
                             </Button>
                         </Box>

@@ -3,7 +3,7 @@ import './NoteListComponent.scss'
 import { NoteInterface } from '@/interfaces/note.interface'
 import { formatDate } from '@/utils/dateTime.helper'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
 	Box, 
 	Text,
@@ -21,7 +21,7 @@ import {
 } from '@chakra-ui/react'
 
 import { DeleteIcon } from '@chakra-ui/icons'
-import { useStoreActions } from 'easy-peasy'
+import { useStoreActions, useStoreState } from 'easy-peasy'
 
 
 const NoteListComponent = ({ note, isForDesktop }: { note: NoteInterface; isForDesktop: boolean }) => 
@@ -30,7 +30,10 @@ const NoteListComponent = ({ note, isForDesktop }: { note: NoteInterface; isForD
 	const toast = useToast();
 	const [displayOptionsOnHover, setDisplayOptionsOnHover] = useState(false);
 	const [isconfirmModalOpen, setIsconfirmModalOpen] = useState(false);
+	const [copiedContent, setCopiedContent] = useState('');
+	const [iscontentCopied, setIscontentCopied] = useState(false);
 	const removeNote = useStoreActions((actions: any) => actions.removeNote);
+    const searchValue = useStoreState((actions: any) => actions.searchValue);
 
 	const formatedDate = () : string => {
 		if (note.updatedAt) {
@@ -48,6 +51,42 @@ const NoteListComponent = ({ note, isForDesktop }: { note: NoteInterface; isForD
 			description: "La note a été retirée avec succès",
 		});
 	}
+
+	useEffect(() => {
+	  if (searchValue.length > 0 && searchValue !== " ") {
+		const noteContentHtml: any = document.getElementById(`note-content-${note.id}`);
+		let noteContent;
+		if (!iscontentCopied) {
+			setCopiedContent(noteContentHtml?.innerHTML);
+			setIscontentCopied(true);
+			noteContent = noteContentHtml?.innerHTML;
+		} else {
+			noteContent = copiedContent;
+		}
+		const splittedContent = noteContent.split(' ');
+		if (
+			String(noteContent).toLowerCase().includes(String(searchValue).toLowerCase()) && 
+			searchValue.length > 2
+		) {			
+			noteContentHtml.innerHTML = "";
+			for (let index = 0; index < splittedContent.length; index++) {
+				const span = document.createElement('span');
+				span.innerText = splittedContent[index] + " ";
+				if (String(splittedContent[index]).toLowerCase().includes(String(searchValue).toLowerCase())) {				
+					span.setAttribute('style', 'color: var(--primary-color)')
+				}
+				noteContentHtml.appendChild(span);
+			}
+		} else {
+			if(copiedContent.length > 0)
+				noteContentHtml.innerHTML = copiedContent;
+			else 
+				noteContentHtml.innerHTML = note.body;
+		}
+	  }	  
+	  
+	}, [searchValue])
+	
 
 	return(
 		<div className="NoteListComponentWrapper">
@@ -86,8 +125,7 @@ const NoteListComponent = ({ note, isForDesktop }: { note: NoteInterface; isForD
 
 			</ModalContent>
 			</Modal>
-			<Box 
-				key={note.id}
+			<Box
 				display="flex"
 				flexFlow="row nowrap"
 				width="100%"
@@ -115,6 +153,9 @@ const NoteListComponent = ({ note, isForDesktop }: { note: NoteInterface; isForD
 					</Text>
 					<Text
 						fontSize="sm"
+						id={`note-content-${note.id}`}
+						w="100%"
+						className='multiline'
 					>
 						{
 							note.body
@@ -158,7 +199,7 @@ const NoteListComponent = ({ note, isForDesktop }: { note: NoteInterface; isForD
 									padding="3"
 									justifyContent="center"
 									borderRadius="xl"
-									marginRight="5"
+									right="12vh"
 								>
 									<Box
 										display="flex"
@@ -166,8 +207,8 @@ const NoteListComponent = ({ note, isForDesktop }: { note: NoteInterface; isForD
 										alignItems="center"
 										onClick={()=>{setIsconfirmModalOpen(true);}}
 									>
-										<DeleteIcon boxSize="5" />&nbsp;
-										<Text>
+										<DeleteIcon boxSize="5" />
+										<Text ml="2">
 											Supprimer
 										</Text>
 									</Box>

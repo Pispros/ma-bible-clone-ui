@@ -24,7 +24,9 @@ const NotePage = () => {
     const [isForDesktop] = useMediaQuery('(min-width: 990px)');
     const notes: Array<NoteInterface> = useStoreState((state: any) => state?.notes);
     const [isLoading, setisLoading] = useState(false);
+    const [search, setSearch] = useState('');
     const saveMultipleNotes = useStoreActions((actions: any) => actions.saveMultipleNotes);
+    const setSearchValue = useStoreActions((actions: any) => actions.setSearchValue);
 
     const titleIcon = (
         <Image
@@ -69,7 +71,13 @@ const NotePage = () => {
                     <InputLeftElement pointerEvents='none'>
                     <SearchIcon color='var(--divider-desktop-color-background)' />
                     </InputLeftElement>
-                    <Input backgroundColor="var(--item-background)" type='text' placeholder='Rechercher' />
+                    <Input 
+                        backgroundColor="var(--item-background)" 
+                        type='text' 
+                        placeholder='Rechercher'
+                        value={search}
+                        onChange={(e)=>{setSearch(e.target.value); setSearchValue(e.target.value)}}
+                    />
                 </InputGroup>
             </Box>
             <Box
@@ -103,7 +111,7 @@ const NotePage = () => {
         .then((response: any) => {
             const temp: Array<NoteInterface> = [];
             for (let index = 0; index < 3; index++) {
-                response.data[index].createdAt = new Date().toISOString();
+                response.data[index].createdAt = new Date().toISOString();                
                 temp.push(response.data[index])
             }
             // Just to see nice skeleton :)
@@ -143,7 +151,7 @@ const NotePage = () => {
                        [...notes]?.reverse().map(note => (
                             <NoteListComponent
                                 note={note}
-                                key={note.id}
+                                key={"note" + note.id}
                                 isForDesktop={isForDesktop}
                             />
                        )) 

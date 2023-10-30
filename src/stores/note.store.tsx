@@ -2,6 +2,7 @@ import { NoteInterface } from "@/interfaces/note.interface";
 import { action } from "easy-peasy";
 
 export const noteStore = {
+    searchValue: "",
     notes: [],
     saveNote: action((state: any, payload: NoteInterface) => {
         payload.id = state.notes.length + 1;
@@ -29,5 +30,8 @@ export const noteStore = {
                 break;
             }
         }
+    }),
+    setSearchValue: action((state: any, payload: string) => {        
+        state.searchValue = payload;
     }),
 }

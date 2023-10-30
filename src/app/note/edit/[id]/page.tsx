@@ -5,17 +5,17 @@ import { useEffect, useState } from "react";
 
 const EditNote = () => 
 {
-    const [noteId, setnoteId] = useState('0')
+    const [noteId, setNoteId] = useState('0')
     useEffect(() => {
-      setnoteId(
+      setNoteId(
         previous => { return window.location.href.split('/')[ window.location.href.split('/').length - 1] }
       )
     }, [])
         
 	return(
 		<NoteContentComponent
-            noteId={noteId}
-        />
+      noteId={noteId}
+    />
 	)
 }
 
