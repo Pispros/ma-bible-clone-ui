@@ -21,11 +21,11 @@ export const noteStore = {
             }
         }
     },),
-    removeNote: action((state: any, payload: NoteInterface) => {
+    removeNote: action((state: any, payload: NoteInterface) => {        
         for (let index = 0; index < state?.notes?.length; index++) {
             const element: NoteInterface = state.notes[index];
             if (element.id === payload.id) {
-                state?.notes.splice(index, 1)
+                state?.notes?.splice(index, 1)
                 break;
             }
         }

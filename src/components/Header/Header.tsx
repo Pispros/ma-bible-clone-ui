@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Input } from '@chakra-ui/react';
+import { Box, Input, useMediaQuery } from '@chakra-ui/react';
 import './Header.scss';
 import { ChevronLeftIcon } from '@chakra-ui/icons'
 import { useRouter } from 'next/navigation';
@@ -19,15 +19,18 @@ const Header = ({ title, titleIcon,  icons, showBack, showBorder, returnUrl, edi
 })  => 
 {
 	const router = useRouter();
+	const [isForDesktop] = useMediaQuery('(min-width: 990px)');
+
 	return(
 		<div className="HeaderWrapper">
 			<Box
+				className='content'
 				display="flex"
 				flexFlow="row nowrap"
 				justifyContent="space-between"
 				alignItems="center"
 				padding="10px 20px 10px 10px"
-				width="100%"
+				width={isForDesktop ? "63%" : "100%"}
 				height="7vh"
 				borderBottom={showBorder ? "solid 1px var(--relevant-background)" : "unset"}
 			>

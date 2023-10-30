@@ -18,13 +18,13 @@ import { apiUrl } from '@/constants/environnement.const';
 import { endPointsMapping } from '@/constants/endpoints.mapping';
 
 
-const notePage = () => {
+const NotePage = () => {
     const mockSkeleton = [{},{},{},{},{},{},{},{},{},{},{},{}];
     const router = useRouter();
     const [isForDesktop] = useMediaQuery('(min-width: 990px)');
     const notes: Array<NoteInterface> = useStoreState((state: any) => state?.notes);
     const [isLoading, setisLoading] = useState(false);
-    //const saveMultipleNotes = useStoreActions((actions: any) => actions.saveMultipleNotes);
+    const saveMultipleNotes = useStoreActions((actions: any) => actions.saveMultipleNotes);
 
     const titleIcon = (
         <Image
@@ -96,18 +96,23 @@ const notePage = () => {
             </Box>
         </>        
     );
-    useEffect(() => {
-    //   if (notes === undefined || notes?.length === 0) {
-    //     setisLoading(true);
-    //     getRequest(`${apiUrl}/${endPointsMapping.get('note')['get']}`)
-    //     .then((response: any) => {
-    //         for (let index = 0; index < response.data.length; index++) {
-    //             response.data[index].createdAt = new Date().toISOString();
-    //         }
-    //         saveMultipleNotes(response.data);
-    //         setisLoading(false);      
-    //     })
-    //   }      
+    useEffect(() => {      
+      if (notes === undefined || notes?.length === 0) {
+        setisLoading(true);
+        getRequest(`${apiUrl}/${endPointsMapping.get('note')['get']}`)
+        .then((response: any) => {
+            const temp: Array<NoteInterface> = [];
+            for (let index = 0; index < 3; index++) {
+                response.data[index].createdAt = new Date().toISOString();
+                temp.push(response.data[index])
+            }
+            // Just to see nice skeleton :)
+            setTimeout(() => {
+                saveMultipleNotes(temp);
+                setisLoading(false);
+            }, 1000);      
+        })
+      }      
     }, [])
     
     return (
@@ -135,7 +140,7 @@ const notePage = () => {
                 !isLoading && notes?.length > 0 ?
                 <>
                     {
-                       notes?.map(note => (
+                       [...notes]?.reverse().map(note => (
                             <NoteListComponent
                                 note={note}
                                 key={note.id}
@@ -168,4 +173,4 @@ const notePage = () => {
     );
 }
 
-export default notePage;
+export default NotePage;

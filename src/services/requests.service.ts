@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { Exception } from 'sass';
 
 export const getRequest = async (url: string) => {
     try {
