@@ -19,11 +19,10 @@ import { formatDate } from '@/utils/dateTime.helper';
 const NoteContentComponent = ({ noteId } : { noteId?: string }) => 
 {
     const toast = useToast();
-    const notes: Array<NoteInterface> = useStoreState((state: any) => state?.getNotes);
+    const notes: Array<NoteInterface> = useStoreState((state: any) => state?.notes);
     const saveNote   = useStoreActions((actions: any) => actions.saveNote);
     const updateNote = useStoreActions((actions: any) => actions.updateNote);
 	const [isForDesktop] = useMediaQuery('(min-width: 990px)');
-    const [noteIdToFilter, setNoteIdToFilter] = useState(noteId);
     const [headerInputValue, setHeaderInputValue] = useState('Titre de la note');
     const [noteContentValue, setNoteContentValue] = useState('');
     const [note, setNote] = useState<NoteInterface>();
@@ -43,26 +42,36 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
             body: noteContentValue
         }
         try {
-            if (noteIdToFilter) {
+            if (note) {
                 updateNote({
-                    id: Number(noteIdToFilter),
+                    id: Number(note.id),
                     ...payload
                 })
                 setIsEditing(false);
                 setJustEdited(true);
-                //updateRequest(`${apiUrl}/${endPointsMapping.get('note')['put']}`, payload);
+                await updateRequest(`${apiUrl}/${endPointsMapping.get('note')['put']}`, payload);
+                toast({
+                    title: "Bravo!",
+                    status: "success",
+                    description: "Votre note a été mise à jour avec sucès!"
+                });
             } else {
                 const response = saveNote(payload);
-                setNoteIdToFilter(response?.payload?.id);
                 setNote(response?.payload);
                 setIsEditing(false);
                 setJustEdited(true);              
-                postRequest(`${apiUrl}/${endPointsMapping.get('note')['put']}`, payload);
+                await postRequest(`${apiUrl}/${endPointsMapping.get('note')['post']}`, payload);
+                toast({
+                    title: "Bravo!",
+                    status: "success",
+                    description: "Votre note a été mise à jour avec sucès!"
+                });
             }
         } catch (error) {
             console.log(error);
             toast({
                 title: "Oops",
+                status: "error",
                 description: "Quelque chose s'est mal passé, veuillez reéssayer plus tard."
             });
         }        
@@ -98,8 +107,8 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
     );
 
     useEffect(() => {
-        if (noteId) {
-            const note = notes.find(element => String(element.id) === noteId);
+        if (noteId) {                        
+            const note = notes?.find(element => String(element.id) === noteId);
             setNote(note);
             setHeaderInputValue(note?.title || 'Titre de la note');
             setNoteContentValue(note?.body || '');
@@ -116,6 +125,7 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
 				returnUrl='/note'
                 editableHeader={true}
                 editConfiguration={[headerInputValue, setHeaderInputValue]}
+                setIsEditing={setIsEditing}
             />
             <Box
                height={isForDesktop ? "84vh" : "74vh"}

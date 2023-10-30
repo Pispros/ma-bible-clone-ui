@@ -25,7 +25,6 @@ const NoteListComponent = ({ note, isForDesktop }: { note: NoteInterface; isForD
 				flexFlow="row nowrap"
 				width="100%"
 				borderBottom="solid 1px var(--relevant-background)"
-				padding="7"
 				cursor="pointer"
 				onMouseOver={()=>{setDisplayOptionsOnHover(true)}}
 				onMouseLeave={()=>{setDisplayOptionsOnHover(false)}}
@@ -34,6 +33,7 @@ const NoteListComponent = ({ note, isForDesktop }: { note: NoteInterface; isForD
 					display="flex"
 					flexFlow="column"
 					alignItems="flex-start"
+					padding="7"
 					w={isForDesktop ? "90%" : "80%"}
 					onClick={()=>{ router.push(`/note/edit/${note.id}`) }}
 				>
@@ -59,6 +59,7 @@ const NoteListComponent = ({ note, isForDesktop }: { note: NoteInterface; isForD
 					flexFlow="row nowrap"
 					alignItems="flex-start"
 					justifyContent="flex-end"
+					padding="7"
 					w={isForDesktop ? "10%" : "20%"}
 				>
 					<Text

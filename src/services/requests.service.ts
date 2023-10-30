@@ -1,11 +1,12 @@
 import axios from 'axios';
+import { Exception } from 'sass';
 
 export const getRequest = async (url: string) => {
     try {
         return await axios.get(url);
     } catch (error) {
         console.log(error);
-        return error;
+        throw error;
     }
 }
 
@@ -14,7 +15,7 @@ export const postRequest = async (url: string, payload: any) => {
         return await axios.post(url, payload);
     } catch (error) {
         console.log(error);
-        return error;
+        throw error;
     }
 }
 
@@ -23,7 +24,7 @@ export const updateRequest = async (url: string, payload: any) => {
         return await axios.put(url, payload);
     } catch (error) {
         console.log(error);
-        return error;  
+        throw error;  
     }
 }
 
@@ -32,6 +33,6 @@ export const deleteRequest = async (url: string) => {
         return await axios.delete(url);
     } catch (error) {
         console.log(error);
-        return error;
+        throw error;
     }    
 }

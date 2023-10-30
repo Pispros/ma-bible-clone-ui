@@ -6,7 +6,7 @@ import { ChevronLeftIcon } from '@chakra-ui/icons'
 import { useRouter } from 'next/navigation';
 
 
-const Header = ({ title, titleIcon,  icons, showBack, showBorder, returnUrl, editableHeader, editConfiguration } : { 
+const Header = ({ title, titleIcon,  icons, showBack, showBorder, returnUrl, editableHeader, editConfiguration, setIsEditing } : { 
 	title?: string;  
 	titleIcon?: React.ReactNode;
 	icons?: React.ReactNode; 
@@ -14,7 +14,8 @@ const Header = ({ title, titleIcon,  icons, showBack, showBorder, returnUrl, edi
 	showBorder?: boolean,
 	editableHeader?: boolean,
 	returnUrl?: string;
-	editConfiguration?: any
+	editConfiguration?: any;
+	setIsEditing?: any
 })  => 
 {
 	const router = useRouter();
@@ -70,6 +71,7 @@ const Header = ({ title, titleIcon,  icons, showBack, showBorder, returnUrl, edi
 							w="95%"
 							ml="2"
 							h="4vh"
+							onFocus={()=>{setIsEditing(true)}}
 						/>
 					</>
 					:

@@ -22,9 +22,9 @@ const notePage = () => {
     const mockSkeleton = [{},{},{},{},{},{},{},{},{},{},{},{}];
     const router = useRouter();
     const [isForDesktop] = useMediaQuery('(min-width: 990px)');
-    const notes: Array<NoteInterface> = useStoreState((state: any) => state.getNotes);
-    const [isLoading, setisLoading] = useState(true);
-    const saveMultipleNotes = useStoreActions((actions: any) => actions.saveMultipleNotes);
+    const notes: Array<NoteInterface> = useStoreState((state: any) => state?.notes);
+    const [isLoading, setisLoading] = useState(false);
+    //const saveMultipleNotes = useStoreActions((actions: any) => actions.saveMultipleNotes);
 
     const titleIcon = (
         <Image
@@ -97,14 +97,17 @@ const notePage = () => {
         </>        
     );
     useEffect(() => {
-      getRequest(`${apiUrl}/${endPointsMapping.get('note')['get']}`)
-      .then((response: any) => {
-        for (let index = 0; index < response.data.length; index++) {
-            response.data[index].createdAt = new Date().toISOString();
-        }
-        saveMultipleNotes(response.data);
-        setisLoading(false);      
-      })
+    //   if (notes === undefined || notes?.length === 0) {
+    //     setisLoading(true);
+    //     getRequest(`${apiUrl}/${endPointsMapping.get('note')['get']}`)
+    //     .then((response: any) => {
+    //         for (let index = 0; index < response.data.length; index++) {
+    //             response.data[index].createdAt = new Date().toISOString();
+    //         }
+    //         saveMultipleNotes(response.data);
+    //         setisLoading(false);      
+    //     })
+    //   }      
     }, [])
     
     return (
