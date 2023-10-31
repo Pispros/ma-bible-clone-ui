@@ -132,7 +132,7 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
                 currentHeight.current = window.visualViewport?.height || 1;
                 const bigContainer = document.getElementById('NoteContentWrapper');                
                 setMobileBoxResizableBox(isIOS() ? currentHeight.current/Number(initialHeight.current) * 91 * 1.2 : currentHeight.current/Number(initialHeight.current) * 91 * 1.29);
-                setMobileTextAreaBoxResizableBox(isIOS() ? currentHeight.current/Number(initialHeight.current) * 91 * 2 : currentHeight.current/Number(initialHeight.current) * 91 * 1.29);
+                setMobileTextAreaBoxResizableBox(isIOS() ? currentHeight.current/Number(initialHeight.current) * 91 * 1.6 : currentHeight.current/Number(initialHeight.current) * 91 * 1.7);
                 if (bigContainer) {
                     bigContainer.style.overflow = "hidden"
                 } 
