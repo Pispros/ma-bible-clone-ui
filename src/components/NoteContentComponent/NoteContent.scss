@@ -1,0 +1,14 @@
+.NoteContentWrapper
+{
+	height: 100%;
+	overflow: hidden !important;
+	padding: 0px !important;
+
+	.tagsContainer {
+		display: flex;
+		flex-flow: row nowrap;
+		overflow-y: hidden;
+		overflow-x: auto;
+		
+	}
+}
