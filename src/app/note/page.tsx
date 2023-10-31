@@ -5,6 +5,7 @@ import './styles.scss';
 import Header from '@/components/Header/Header';
 import noteD from '@/assets/icons/active/note.png';
 import add from '@/assets/icons/add.png';
+import folderOutline from '@/assets/icons/folder-outline.png';
 import empty from '@/assets/img/empty.png';
 import Image from 'next/image';
 import { SearchIcon } from '@chakra-ui/icons';
@@ -152,14 +153,49 @@ const NotePage = () => {
                 <>
                     {
                        window !== undefined &&
-                       [...notes]?.reverse().map(note => (
-                            <NoteListComponent
-                                note={note}
-                                key={"note" + note.id}
-                                isForDesktop={isForDesktop}
-                                searchValue={search}
-                            />
-                       )) 
+                       <>
+                            <Box
+                                display="flex"
+                                flexFlow="row nowrap"
+                                alignItems="center"
+                                borderBottom="solid 1px var(--relevant-background)"
+                                pl="7"
+                                pt="2"
+                                pb="2"
+                            >
+                                <Image
+                                    src={folderOutline}
+                                    alt="Folder Icon"
+                                />
+                                <Text
+                                    ml="2"
+                                >
+                                    Archivée(s)
+                                </Text>                                
+                                <Box
+                                    ml="2"
+                                    display="flex"
+                                    alignItems="center"
+                                    justifyContent="center"
+                                    borderRadius="50%"
+                                    w="20px"
+                                    h="20px"
+                                    backgroundColor="var(--relevant-background)"
+                                >
+                                    1
+                                </Box>
+                            </Box>
+                            {
+                                [...notes]?.reverse().map(note => (
+                                    <NoteListComponent
+                                        note={note}
+                                        key={"note" + note.id}
+                                        isForDesktop={isForDesktop}
+                                        searchValue={search}
+                                    />
+                                ))
+                            } 
+                       </>
                     }
                 </>
                 :

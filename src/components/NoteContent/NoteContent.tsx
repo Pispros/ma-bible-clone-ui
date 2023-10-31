@@ -144,6 +144,11 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
                     onChange={(e) => setNoteContentValue(e.target.value)}
                     onFocus={()=>{setIsEditing(true)}}
                 />
+                <Box
+                    className='tagsContainer'
+                >
+
+                </Box>
             </Box>
             <Box
                 height="8vh"
