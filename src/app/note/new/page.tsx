@@ -1,6 +1,6 @@
 'use client';
 
-import NoteContentComponent from "@/components/NoteContent/NoteContent"
+import NoteContentComponent from "@/components/NoteContentComponent/NoteContent"
 
 const NewNote = () => 
 {

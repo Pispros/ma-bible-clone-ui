@@ -2,7 +2,7 @@
 import { useMediaQuery, Text, Box, Divider, SimpleGrid } from '@chakra-ui/react';
 import './MainMenu.scss';
 import Image from 'next/image';
-import UserSelect from '@/components/UserSelect/UserSelect';
+import UserSelect from '@/components/UserSelectComponent/UserSelect';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { mobileMenuSettings, dektopMenuSettings } from '@/utils/menu.configuration';

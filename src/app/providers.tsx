@@ -4,7 +4,7 @@ import { CacheProvider } from '@chakra-ui/next-js';
 import { ChakraProvider, Grid, Box, useMediaQuery } from '@chakra-ui/react';
 import { StoreProvider } from 'easy-peasy';
 import { easyPeasyStore } from '@/stores';
-import MainMenu from '@/components/MainMenu/MainMenu';
+import MainMenu from '@/components/MainMenuComponent/MainMenu';
 
 export function Providers({ 
     children 

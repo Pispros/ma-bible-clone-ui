@@ -154,9 +154,9 @@ const NoteListComponent = ({ note, isForDesktop, searchValue }: { note: NoteInte
 						flexFlow="row nowrap"
 						justifyContent="flex-start"
 						alignItems="center"
+						width="100%"
 					>
 						<Text
-							width="70%"
 							fontSize="xl"
 							fontWeight="bold"
 							className='ellipsis-text'

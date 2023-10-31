@@ -2,7 +2,7 @@
 
 import { Box, Text, useMediaQuery, InputGroup, InputLeftElement, Input, SkeletonText } from '@chakra-ui/react';
 import './styles.scss';
-import Header from '@/components/Header/Header';
+import Header from '@/components/HeaderComponent/Header';
 import noteD from '@/assets/icons/active/note.png';
 import add from '@/assets/icons/add.png';
 import folderOutline from '@/assets/icons/folder-outline.png';
