@@ -144,6 +144,11 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
                     onChange={(e) => setNoteContentValue(e.target.value)}
                     onFocus={()=>{setIsEditing(true)}}
                 />
+                <Box
+                    className='tagsContainer'
+                >
+
+                </Box>
             </Box>
             <Box
                 height="8vh"
@@ -197,7 +202,7 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
                             alignItems="center"
                             flexFlow="row nowrap"
                         >
-                            <Button onClick={()=>{addOrUpdateNote()}} backgroundColor="#9747FF" color="white" size='sm'>
+                            <Button onClick={()=>{addOrUpdateNote()}} backgroundColor="var(--primary-color)" color="white" size='sm'>
                                 OK
                             </Button>
                         </Box>

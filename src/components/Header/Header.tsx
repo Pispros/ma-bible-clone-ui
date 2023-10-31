@@ -30,7 +30,7 @@ const Header = ({ title, titleIcon,  icons, showBack, showBorder, returnUrl, edi
 				justifyContent="space-between"
 				alignItems="center"
 				padding="10px 20px 10px 10px"
-				width={isForDesktop ? "63%" : "100%"}
+				width={isForDesktop ? "64%" : "100%"}
 				height="7vh"
 				borderBottom={showBorder ? "solid 1px var(--relevant-background)" : "unset"}
 			>
