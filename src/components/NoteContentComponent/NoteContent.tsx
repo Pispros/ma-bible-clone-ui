@@ -23,6 +23,7 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
     const toast = useToast();
     const initialHeight = useRef(1);
     const currentHeight = useRef(1);
+    const alreadyResized = useRef(false);
     const notes: Array<NoteInterface> = useStoreState((state: any) => state?.notes);
     const saveNote   = useStoreActions((actions: any) => actions.saveNote);
     const updateNote = useStoreActions((actions: any) => actions.updateNote);
@@ -111,6 +112,47 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
         </>        
     );
 
+    const isIOS = () : boolean => {
+        const list = ['iPad', 'iPhone', 'iPod', 'Mac'];
+        for (let index = 0; index < list.length; index++) {
+            const element = list[index];
+            if (element.toLowerCase().includes(String(navigator.platform).toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    // This is for when mobile keyboard resizes the viewport
+    const onFocusTextArea = (e: any) => {
+        e.preventDefault();
+        if (!isForDesktop && alreadyResized.current === false) {
+            alreadyResized.current = true;
+            setTimeout(() => {
+                currentHeight.current = window.visualViewport?.height || 1;
+                const bigContainer = document.getElementById('NoteContentWrapper');                
+                setMobileBoxResizableBox(isIOS() ? currentHeight.current/Number(initialHeight.current) * 91 * 1.2 : currentHeight.current/Number(initialHeight.current) * 91 * 1.29);
+                setMobileTextAreaBoxResizableBox(isIOS() ? currentHeight.current/Number(initialHeight.current) * 91 * 2 : currentHeight.current/Number(initialHeight.current) * 91 * 1.29);
+                if (bigContainer) {
+                    bigContainer.style.overflow = "hidden"
+                } 
+           }, 100);
+        }
+    }
+
+    const onBlurTextArea = () => {
+        if (!isForDesktop) {
+            currentHeight.current = 1;
+            setMobileBoxResizableBox(91);
+            setMobileTextAreaBoxResizableBox(91);
+            alreadyResized.current = false;
+            const bigContainer = document.getElementById('NoteContentWrapper');
+            if (bigContainer) {
+                bigContainer.style.overflow = "auto"
+            }
+        }
+    }
+
     useEffect(() => {
         if (noteId) {                        
             const note = notes?.find(element => String(element.id) === noteId);
@@ -121,42 +163,13 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
     }, [noteId])
 
     useEffect(() => {
-        initialHeight.current = window.innerHeight;
-        
+        initialHeight.current = window.innerHeight;        
         const textAreaInput = document.getElementById('text-content-id');
         if (textAreaInput) {     
             setTimeout(() => {
                 textAreaInput.style.height = textAreaInput.scrollHeight + 'px';
             }, 100);                   
         }
-
-        // This is for when mobile keyboard resizes the viewport
-        // 116 is an arbitrary used after multiple testing :)
-        window.addEventListener('resize', () => {
-           setTimeout(() => {
-                const bigContainer = document.getElementById('NoteContentWrapper');
-                currentHeight.current = window.visualViewport?.height || 1;
-                if (
-                    currentHeight.current !== initialHeight.current && 
-                    currentHeight.current < initialHeight.current &&
-                    initialHeight.current !== 1
-                ) {
-                    setMobileBoxResizableBox((currentHeight.current/Number(initialHeight.current) * 116));
-                    setMobileTextAreaBoxResizableBox((currentHeight.current/Number(initialHeight.current) * 150));                    
-                    if (bigContainer) {
-                        bigContainer.style.overflow = "hidden"
-                    }
-                } else {
-                    if (currentHeight.current === initialHeight.current) {
-                        setMobileBoxResizableBox(91);
-                        setMobileTextAreaBoxResizableBox(91);
-                        if (bigContainer) {
-                            bigContainer.style.overflow = "auto"
-                        }
-                    }
-                } 
-           }, 100);                      
-        });
     }, [])
     
     
@@ -193,6 +206,8 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
                         value={noteContentValue}
                         // Auto rezise textarea while typing. Not very clean but simple & working :)
                         onChange={(e) => {setNoteContentValue(e.target.value); setIsEditing(true); e.target.style.height = (e.target.scrollHeight) + "px"}}
+                        onFocus={(e) => {onFocusTextArea(e)}}
+                        onBlur={onBlurTextArea}
                     />
                     <Box
                         mt="1"
