@@ -1,4 +1,4 @@
-
+'use client';
 import './NoteListComponent.scss'
 import { NoteInterface } from '@/interfaces/note.interface'
 import { formatDate } from '@/utils/dateTime.helper'
@@ -21,7 +21,7 @@ import {
 } from '@chakra-ui/react'
 
 import { DeleteIcon } from '@chakra-ui/icons'
-import { useStoreActions, useStoreState } from 'easy-peasy'
+import { useStoreActions } from 'easy-peasy'
 
 
 const NoteListComponent = ({ note, isForDesktop, searchValue }: { note: NoteInterface; isForDesktop: boolean; searchValue?: string }) => 

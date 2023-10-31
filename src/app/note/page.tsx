@@ -11,11 +11,14 @@ import { SearchIcon } from '@chakra-ui/icons';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { NoteInterface } from '@/interfaces/note.interface';
 import { useRouter } from 'next/navigation';
-import NoteListComponent from '@/components/NoteListComponent/NoteListComponent';
 import { useEffect, useState } from 'react';
 import { getRequest } from '@/services/requests.service';
 import { apiUrl } from '@/constants/environnement.const';
 import { endPointsMapping } from '@/constants/endpoints.mapping';
+import dynamic from 'next/dynamic';
+
+// Disable SSR because of hydratation mismatch which seems to be unavoidable
+const NoteListComponent = dynamic(() => import('@/components/NoteListComponent/NoteListComponent'), { ssr: false })
 
 
 const NotePage = () => {
@@ -148,6 +151,7 @@ const NotePage = () => {
                 !isLoading && notes?.length > 0 ?
                 <>
                     {
+                       window !== undefined &&
                        [...notes]?.reverse().map(note => (
                             <NoteListComponent
                                 note={note}
