@@ -74,6 +74,8 @@ const Header = ({ title, titleIcon,  icons, showBack, showBorder, returnUrl, edi
 							w="95%"
 							ml="2"
 							h="4vh"
+							outline="none"
+							border="unset"
 							onFocus={()=>{setIsEditing(true)}}
 						/>
 					</>

@@ -9,12 +9,14 @@ import { useEffect, useState } from 'react';
 import { useStoreActions, useStoreState } from 'easy-peasy';
 import { NoteInterface } from '@/interfaces/note.interface';
 import tagD from '@/assets/icons/active/tag.png';
+import redTag from '@/assets/icons/red-tag.png';
 import undo from '@/assets/icons/undo.png';
 import forwardD from '@/assets/icons/forward.png';
 import { postRequest, updateRequest } from '@/services/requests.service';
 import { endPointsMapping } from '@/constants/endpoints.mapping';
 import { apiUrl } from '@/constants/environnement.const';
 import { formatDate } from '@/utils/dateTime.helper';
+import TagComponent from '@/components/TagComponent/TagComponent';
 
 const NoteContentComponent = ({ noteId } : { noteId?: string }) => 
 {
@@ -134,7 +136,8 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
                     mt={isForDesktop ? "2" : "3"}
                     ml="1%"
                     resize="none"
-                    height={isForDesktop ? "82vh" : "73vh"}
+                    maxHeight={isForDesktop ? "77vh" : "68vh"}
+                    height="fit-content"
                     width="98%"
                     placeholder='Saisir une note.'
                     border="unset"
@@ -145,9 +148,13 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
                     onFocus={()=>{setIsEditing(true)}}
                 />
                 <Box
+                    h="5vh"
                     className='tagsContainer'
                 >
-
+                    <TagComponent
+                        name='Prière'
+                        tag={redTag}
+                    />
                 </Box>
             </Box>
             <Box
@@ -170,7 +177,7 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
                     <Image
                         src={tagD}
                         alt='tag icon'
-                        style={{width: isForDesktop ? 20 : 20}}
+                        style={{width: 20}}
                     />
                     &nbsp;
                     1

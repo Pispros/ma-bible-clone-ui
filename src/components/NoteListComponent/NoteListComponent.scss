@@ -1,5 +1,10 @@
 .NoteListComponentWrapper
 {
+    .ellipsis-text {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
 	.multiline {
         display: -webkit-box;
         -webkit-line-clamp: 2;

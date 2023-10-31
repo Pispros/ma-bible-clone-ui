@@ -22,6 +22,7 @@ import {
 
 import { DeleteIcon } from '@chakra-ui/icons'
 import { useStoreActions } from 'easy-peasy'
+import TagComponent from '@/components/TagComponent/TagComponent';
 
 
 const NoteListComponent = ({ note, isForDesktop, searchValue }: { note: NoteInterface; isForDesktop: boolean; searchValue?: string }) => 
@@ -147,15 +148,28 @@ const NoteListComponent = ({ note, isForDesktop, searchValue }: { note: NoteInte
 					w={isForDesktop ? "90%" : "80%"}
 					onClick={()=>{ router.push(`/note/edit/${note.id}`) }}
 				>
-					<Text
+					<Box
 						mb="3"
-						fontSize="xl"
-						fontWeight="bold"
+						display="flex"
+						flexFlow="row nowrap"
+						justifyContent="flex-start"
+						alignItems="center"
 					>
-						{
-							note.title
-						}
-					</Text>
+						<Text
+							width="70%"
+							fontSize="xl"
+							fontWeight="bold"
+							className='ellipsis-text'
+						>
+							{
+								note.title
+							}
+						</Text>
+						<TagComponent
+							name='BDS'
+							doNotDisplayTag={true}
+						/>
+					</Box>
 					<Text
 						fontSize="sm"
 						id={`note-content-${note.id}`}
