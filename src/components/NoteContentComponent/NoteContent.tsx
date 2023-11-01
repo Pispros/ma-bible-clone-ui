@@ -23,6 +23,7 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
     const toast = useToast();
     const initialHeight = useRef(1);
     const currentHeight = useRef(1);
+    const isResizedOnAndroidDevices = useRef(false);
     const alreadyResized = useRef(false);
     const notes: Array<NoteInterface> = useStoreState((state: any) => state?.notes);
     const saveNote   = useStoreActions((actions: any) => actions.saveNote);
@@ -125,6 +126,13 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
     
     // This is for when mobile keyboard resizes the viewport
     const onFocusTextArea = (e: any) => {
+<<<<<<< HEAD
+=======
+        // Just to prevent resizing while inspecting with developer tools whithin the browser
+        // if (isResizedOnAndroidDevices.current === false) {
+        //     return;
+        // }
+>>>>>>> 41da26ebcb067b194e9267b76df6ade1aaed5faa
         e.preventDefault();
         if (!isForDesktop && alreadyResized.current === false) {
             alreadyResized.current = true;
@@ -132,7 +140,11 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
                 currentHeight.current = window.visualViewport?.height || 1;
                 const bigContainer = document.getElementById('NoteContentWrapper');                
                 setMobileBoxResizableBox(isIOS() ? currentHeight.current/Number(initialHeight.current) * 91 * 1.2 : currentHeight.current/Number(initialHeight.current) * 91 * 1.29);
+<<<<<<< HEAD
                 setMobileTextAreaBoxResizableBox(isIOS() ? currentHeight.current/Number(initialHeight.current) * 91 * 2 : currentHeight.current/Number(initialHeight.current) * 91 * 1.29);
+=======
+                setMobileTextAreaBoxResizableBox(isIOS() ? currentHeight.current/Number(initialHeight.current) * 91 * 1.6 : currentHeight.current/Number(initialHeight.current) * 91 * 1.7);
+>>>>>>> 41da26ebcb067b194e9267b76df6ade1aaed5faa
                 if (bigContainer) {
                     bigContainer.style.overflow = "hidden"
                 } 
@@ -170,6 +182,25 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
                 textAreaInput.style.height = textAreaInput.scrollHeight + 'px';
             }, 100);                   
         }
+<<<<<<< HEAD
+=======
+
+        // Just to prevent resizing while inspecting with developer tools whithin the browser
+        // window.addEventListener('resize', () => {
+        //     const newHeight = window.visualViewport?.height || 1;
+        //     currentHeight.current = newHeight;
+        //     if (
+        //         initialHeight.current !== newHeight &&
+        //         newHeight != 1
+        //     ) {
+        //         isResizedOnAndroidDevices.current = true;
+        //     } else {
+        //         if (initialHeight.current === newHeight) {
+        //             isResizedOnAndroidDevices.current = false;
+        //         }
+        //     }
+        // })
+>>>>>>> 41da26ebcb067b194e9267b76df6ade1aaed5faa
     }, [])
     
     
@@ -192,6 +223,7 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
             >
                 <Box>
                     <Textarea
+                        translate="no"
                         mt={isForDesktop ? "2" : "1"}
                         ml="1%"
                         resize="none"

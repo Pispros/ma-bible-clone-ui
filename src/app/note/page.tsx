@@ -17,9 +17,8 @@ import { getRequest } from '@/services/requests.service';
 import { apiUrl } from '@/constants/environnement.const';
 import { endPointsMapping } from '@/constants/endpoints.mapping';
 import dynamic from 'next/dynamic';
+import NoteListComponent from '@/components/NoteListComponent/NoteListComponent';
 
-// Disable SSR because of hydratation mismatch which seems to be unavoidable
-const NoteListComponent = dynamic(() => import('@/components/NoteListComponent/NoteListComponent'), { ssr: false })
 
 
 const NotePage = () => {
