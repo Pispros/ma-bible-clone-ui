@@ -23,6 +23,7 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
     const toast = useToast();
     const initialHeight = useRef(1);
     const currentHeight = useRef(1);
+    const isResizedOnAndroidDevices = useRef(false);
     const alreadyResized = useRef(false);
     const notes: Array<NoteInterface> = useStoreState((state: any) => state?.notes);
     const saveNote   = useStoreActions((actions: any) => actions.saveNote);
@@ -125,6 +126,10 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
     
     // This is for when mobile keyboard resizes the viewport
     const onFocusTextArea = (e: any) => {
+        // Just to prevent resizing while inspecting with developer tools whithin the browser
+        // if (isResizedOnAndroidDevices.current === false) {
+        //     return;
+        // }
         e.preventDefault();
         if (!isForDesktop && alreadyResized.current === false) {
             alreadyResized.current = true;
@@ -170,6 +175,22 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
                 textAreaInput.style.height = textAreaInput.scrollHeight + 'px';
             }, 100);                   
         }
+
+        // Just to prevent resizing while inspecting with developer tools whithin the browser
+        // window.addEventListener('resize', () => {
+        //     const newHeight = window.visualViewport?.height || 1;
+        //     currentHeight.current = newHeight;
+        //     if (
+        //         initialHeight.current !== newHeight &&
+        //         newHeight != 1
+        //     ) {
+        //         isResizedOnAndroidDevices.current = true;
+        //     } else {
+        //         if (initialHeight.current === newHeight) {
+        //             isResizedOnAndroidDevices.current = false;
+        //         }
+        //     }
+        // })
     }, [])
     
     
