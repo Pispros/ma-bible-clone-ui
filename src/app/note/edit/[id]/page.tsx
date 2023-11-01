@@ -1,20 +1,17 @@
-'use client';
+"use client";
 
 import NoteContentComponent from "@/components/NoteContentComponent/NoteContent"
-import { useEffect, useState } from "react";
+import { FC } from "react";
 
-const EditNote = () => 
-{
-    const [noteId, setNoteId] = useState('0')
-    useEffect(() => {
-      setNoteId(
-        previous => { return window.location.href.split('/')[ window.location.href.split('/').length - 1] }
-      )
-    }, [])
-        
+interface pageProps {
+  params: { id: string }
+}
+
+const EditNote : FC<pageProps> = ({params}) => 
+{        
 	return(
 		<NoteContentComponent
-      noteId={noteId}
+      noteId={params.id}
     />
 	)
 }

@@ -213,6 +213,7 @@ const NoteContentComponent = ({ noteId } : { noteId?: string }) =>
             >
                 <Box>
                     <Textarea
+                        translate="no"
                         mt={isForDesktop ? "2" : "1"}
                         ml="1%"
                         resize="none"
