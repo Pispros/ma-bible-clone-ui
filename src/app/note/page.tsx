@@ -185,14 +185,20 @@ const NotePage = () => {
                                 </Box>
                             </Box>
                             {
-                                [...notes]?.reverse().map(note => (
-                                    <NoteListComponent
-                                        note={note}
-                                        key={"note" + note.id}
-                                        isForDesktop={isForDesktop}
-                                        searchValue={search}
-                                    />
-                                ))
+                                // Avoid hydratation warnings in dev mode
+                                (typeof window !== 'undefined' || window !== undefined) &&
+                                <>
+                                    {
+                                        [...notes]?.reverse().map(note => (
+                                            <NoteListComponent
+                                                note={note}
+                                                key={"note" + note.id}
+                                                isForDesktop={isForDesktop}
+                                                searchValue={search}
+                                            />
+                                        ))
+                                    }
+                                </>
                             } 
                        </>
                     }
